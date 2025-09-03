@@ -20,4 +20,3 @@ export default function Legend({ types }: { types: string[] }) {
     </div>
   );
 }
-

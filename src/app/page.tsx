@@ -105,7 +105,14 @@ export default function Home() {
             <h2 className="font-medium">Incidents</h2>
             <span className="text-xs opacity-70">{loading ? "Loading…" : `${incidents.length} result(s)`}</span>
           </div>
-          <div className="flex flex-wrap gap-2 mb-2 text-xs opacity-70">Range: {days === 90 ? "Last 3 months" : days === 180 ? "Last 6 months" : days === 365 ? "Last year" : `${days} day(s)`} • {radiusKm}km radius</div>
+          <div className="flex flex-wrap gap-2 mb-2 text-xs">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-black/10 dark:border-white/15 bg-white/70 dark:bg-white/10">
+              {days === 90 ? "Last 3 months" : days === 180 ? "Last 6 months" : days === 365 ? "Last year" : `${days} day(s)`}
+            </span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-black/10 dark:border-white/15 bg-white/70 dark:bg-white/10">
+              {radiusKm} km
+            </span>
+          </div>
           <div className="mb-3">
             <Legend types={incidents.map((i) => i.type)} />
           </div>
