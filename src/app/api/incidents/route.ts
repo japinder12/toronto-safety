@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     if (mock) {
       incidents = mockIncidents(lat, lng);
     } else {
-      const torontoMciUrl = process.env.TORONTO_MCI_FEATURE_URL;
+      const torontoMciUrl = process.env.TORONTO_MCI_FEATURE_URL ? normalizeArcgisFeatureUrl(process.env.TORONTO_MCI_FEATURE_URL) : undefined;
       if (torontoMciUrl) {
         incidents = await fetchTorontoMCIAttr(torontoMciUrl, { lat, lng, radiusKm, days }, attempts);
       } else {
@@ -206,6 +206,13 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
+}
+
+function normalizeArcgisFeatureUrl(u: string): string {
+  // Strip querystring and trailing /query from provided URL to get the base layer endpoint
+  let base = u.split("?")[0];
+  base = base.replace(/\/?query$/i, "");
+  return base;
 }
 
 // Removed generic attribute mapping helper; handled within MCI fetch
