@@ -32,3 +32,24 @@ body {
 .tabular {
   font-variant-numeric: tabular-nums;
 }
+
+/* Leaflet tooltip styling */
+.map-tooltip {
+  background: rgba(255,255,255,0.95);
+  color: #111;
+  border: 1px solid rgba(0,0,0,0.12);
+  padding: 6px 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.leaflet-tooltip.map-tooltip::before {
+  border-top-color: rgba(255,255,255,0.95);
+}
+.dark .map-tooltip {
+  background: rgba(17,17,17,0.95);
+  color: #e5e7eb;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.dark .leaflet-tooltip.map-tooltip::before {
+  border-top-color: rgba(17,17,17,0.95);
+}

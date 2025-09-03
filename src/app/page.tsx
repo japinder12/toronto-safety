@@ -34,7 +34,7 @@ export default function Home() {
           id: i.id,
           lat: i.lat!,
           lng: i.lng!,
-          label: `${i.type} — ${new Date(i.timestamp).toLocaleString("en-CA", { timeZone: "America/Toronto", hour12: true })}${i.address ? `, ${i.address}` : ""}`,
+          label: `<strong>${i.type}</strong><br>${new Date(i.timestamp).toLocaleString("en-CA", { timeZone: "America/Toronto", hour12: true })}${i.address ? `, ${i.address}` : ""}`,
           color: colorForType(i.type),
         })),
     [incidents]

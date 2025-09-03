@@ -72,8 +72,8 @@ export default function MapView({ center, zoom = 12, markers = [], autoFit = tru
           fillOpacity: 0.85,
         });
         if (m.label) {
-          circle.bindPopup(m.label);
-          circle.bindTooltip(m.label, { direction: "top", sticky: true, opacity: 0.9 });
+          circle.bindPopup(m.label, { className: "map-tooltip" });
+          circle.bindTooltip(m.label, { direction: "top", sticky: true, opacity: 0.95, className: "map-tooltip" });
         }
         circle.addTo(group);
         latlngs.push([m.lat, m.lng]);
@@ -121,8 +121,8 @@ export default function MapView({ center, zoom = 12, markers = [], autoFit = tru
             fillOpacity: 0.85,
           });
           if (m.label) {
-            circle.bindPopup(m.label);
-            circle.bindTooltip(m.label, { direction: "top", sticky: true, opacity: 0.9 });
+            circle.bindPopup(m.label, { className: "map-tooltip" });
+            circle.bindTooltip(m.label, { direction: "top", sticky: true, opacity: 0.95, className: "map-tooltip" });
           }
           circle.addTo(group);
           latlngs.push([m.lat, m.lng]);
