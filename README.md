@@ -53,27 +53,3 @@ pnpm dev
 ```
 
 Open http://localhost:3000
-
-## Deploy (Vercel)
-
-1) Push this repo to GitHub/GitLab
-2) Import into Vercel
-3) Set environment variables:
-   - `TORONTO_MCI_FEATURE_URL`
-   - Optional: `GEOCODE_USER_AGENT`, `GEOCODE_REFERER`
-4) Deploy
-
-Tips:
-- Add a repo description: “Toronto Neighbourhood Safety Dashboard — explore recent Toronto Police MCI near any address.”
-- Suggested topics: `nextjs`, `leaflet`, `open-data`, `toronto`, `police`, `mci`, `dashboard`
-
-## Data Source
-
-- Toronto Police Service: Major Crime Indicators (Open Data)
-- Endpoint: `TORONTO_MCI_FEATURE_URL`
-- Notes: public data may be batched/delayed; we use OCC_DATE + OCC_HOUR when available
-
-## Privacy & Usage
-
-- Geocoding uses Nominatim — set a descriptive `GEOCODE_USER_AGENT`.
-- Informational project only, for my own skill development; not an official report.
