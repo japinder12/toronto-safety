@@ -6,7 +6,7 @@ type Props = {
   initialPostal?: string;
   initialDays?: number;
   initialRadiusKm?: number;
-  onSearch: (query: { postal: string; days: number; radiusKm: number; strict: boolean }) => void;
+  onSearch: (query: { postal: string; days: number; radiusKm: number }) => void;
 };
 
 export default function SearchForm({
@@ -18,7 +18,6 @@ export default function SearchForm({
   const [postal, setPostal] = useState(initialPostal);
   const [days, setDays] = useState<number>(initialDays);
   const [radiusKm, setRadiusKm] = useState<number>(initialRadiusKm);
-  const [strict, setStrict] = useState<boolean>(false);
   
 
   return (
@@ -27,7 +26,7 @@ export default function SearchForm({
       onSubmit={(e) => {
         e.preventDefault();
         if (!postal.trim()) return;
-        onSearch({ postal: postal.trim(), days, radiusKm, strict });
+        onSearch({ postal: postal.trim(), days, radiusKm });
       }}
     >
       <input
@@ -68,11 +67,6 @@ export default function SearchForm({
         />
         <span className="text-xs tabular-nums w-8">{radiusKm}km</span>
       </div>
-      <label className="flex items-center gap-2 px-3 py-2 rounded-lg border border-black/10 dark:border-white/20 bg-white/80 dark:bg-black/40 text-xs cursor-pointer select-none">
-        <input type="checkbox" checked={strict} onChange={(e) => setStrict(e.target.checked)} />
-        Strict dates only
-      </label>
-      
       <button type="submit" className="rounded-md bg-foreground text-background px-4 py-2 font-medium">
         Search
       </button>

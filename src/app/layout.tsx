@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Toronto Neighbourhood Safety Dashboard",
     description: "Explore recent Toronto Police MCI incidents near any address.",
-    url: "http://localhost:3000/",
+    url: "https://toronto-safety-five.vercel.app/",
     siteName: "Toronto Safety",
     images: [{ url: "/og.svg", width: 1200, height: 630, alt: "Toronto Safety" }],
     type: "website",
