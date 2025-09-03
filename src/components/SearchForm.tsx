@@ -11,7 +11,7 @@ type Props = {
 
 export default function SearchForm({
   initialPostal = "",
-  initialDays = 7,
+  initialDays = 90,
   initialRadiusKm = 3,
   onSearch,
 }: Props) {
@@ -38,16 +38,14 @@ export default function SearchForm({
       />
       <div className="relative">
         <select
-          aria-label="Last N days"
+          aria-label="Time range"
           className="appearance-none rounded-lg border border-black/10 dark:border-white/20 bg-white/80 dark:bg-black/40 px-3 py-2 pr-8 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-500/40"
           value={days}
           onChange={(e) => setDays(parseInt(e.target.value, 10))}
         >
-          <option value={1}>Last 1 day</option>
-          <option value={3}>Last 3 days</option>
-          <option value={7}>Last 7 days</option>
-          <option value={14}>Last 14 days</option>
-          <option value={30}>Last 30 days</option>
+          <option value={90}>Last 3 months</option>
+          <option value={180}>Last 6 months</option>
+          <option value={365}>Last year</option>
         </select>
         <svg
           aria-hidden

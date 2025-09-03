@@ -270,6 +270,82 @@ function bboxFromPoint(lat: number, lng: number, radiusKm: number) {
 
 // No server-side date WHERE; filtering handled after fetch with fallback messaging
 
+async function fetchTorontoMCIAttr(
+  featureUrl: string,
+  opts: { lat: number; lng: number; radiusKm: number; days: number },
+  debugLog?: any[]
+): Promise<Incident[]> {
+  const { lat, lng, radiusKm, days } = opts;
+  // Build attribute where with lat/lng bounding box to keep response small
+  const envelope = bboxFromPoint(lat, lng, radiusKm);
+  const where = [
+    `LAT_WGS84 >= ${envelope.ymin}`,
+    `LAT_WGS84 <= ${envelope.ymax}`,
+    `LONG_WGS84 >= ${envelope.xmin}`,
+    `LONG_WGS84 <= ${envelope.xmax}`,
+  ].join(" AND ");
+
+  const url = new URL(featureUrl.replace(/\/$/, "") + "/query");
+  url.searchParams.set("f", "json");
+  url.searchParams.set("outFields", "OBJECTID,OFFENCE,MCI_CATEGORY,OCC_DATE,LAT_WGS84,LONG_WGS84,NEIGHBOURHOOD_140,NEIGHBOURHOOD_158");
+  url.searchParams.set("where", where);
+  url.searchParams.set("returnGeometry", "false");
+  url.searchParams.set("orderByFields", "OCC_DATE DESC");
+  url.searchParams.set("resultRecordCount", "1000");
+  url.searchParams.set("returnExceededLimitFeatures", "true");
+
+  let features: any[] = [];
+  try {
+    const res = await fetch(url.toString(), { cache: "no-store" });
+    const data = res.ok ? await res.json() : null;
+    if (debugLog) {
+      debugLog.push({ source: "toronto-mci", note: "attr-bbox", url: url.toString(), status: res.status, ok: res.ok, count: Array.isArray(data?.features) ? data.features.length : -1 });
+    }
+    features = Array.isArray(data?.features) ? data.features : [];
+  } catch (err: any) {
+    if (debugLog) debugLog.push({ source: "toronto-mci", note: "attr-bbox-error", error: err?.message });
+  }
+
+  const now = Date.now();
+  const cutoff = now - days * 24 * 60 * 60 * 1000;
+
+  const items: Incident[] = features
+    .map((f: any) => {
+      const a = f.attributes || {};
+      const id = String(a.OBJECTID ?? a.ObjectID ?? a.objectid ?? cryptoRandomId());
+      const latA = parseFloat(a.LAT_WGS84);
+      const lngA = parseFloat(a.LONG_WGS84);
+      const type = a.OFFENCE || a.MCI_CATEGORY || "Incident";
+      const timestamp = normalizeArcgisDate(a.OCC_DATE) || new Date().toISOString();
+      return { id, type, timestamp, lat: latA, lng: lngA, address: a.NEIGHBOURHOOD_140 || a.NEIGHBOURHOOD_158, source: "toronto-mci" } as Incident;
+    })
+    .filter((i) => isFinite(i.lat as any) && isFinite(i.lng as any));
+
+  // Filter by precise radius and days on server
+  const inside = items.filter((i) => {
+    const t = new Date(i.timestamp).getTime();
+    const okDate = isFinite(t) ? t >= cutoff : true;
+    const d = haversineKm(lat, lng, i.lat!, i.lng!);
+    return okDate && d <= radiusKm;
+  });
+
+  if (debugLog) {
+    debugLog.push({ source: "toronto-mci", note: "post-filter", kept: inside.length, total: items.length });
+  }
+
+  return inside;
+}
+
+function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const toRad = (v: number) => (v * Math.PI) / 180;
+  const R = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
 function arcgisToLatLng(g: any): { lat?: number; lng?: number } {
   if (!g) return {};
   if (typeof g.y === "number" && typeof g.x === "number") {

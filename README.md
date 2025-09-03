@@ -43,4 +43,4 @@ GEOCODE_REFERER="http://localhost:3000"
 
 ## Next Steps (Data Wiring)
 
-- UI Filters: Time range (1/3/7/14/30 days), radius 1–5 km.
+- UI Filters: Time range (Last 3 months / 6 months / 1 year), radius 1–5 km.
