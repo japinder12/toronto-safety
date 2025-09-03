@@ -31,7 +31,7 @@ export default function Home() {
           id: i.id,
           lat: i.lat!,
           lng: i.lng!,
-          label: `${i.type}${i.address ? `\n${i.address}` : ""}`,
+          label: `${i.type}${i.address ? `, ${i.address}` : ""}`,
           color: "#f97316",
         })),
     [incidents]

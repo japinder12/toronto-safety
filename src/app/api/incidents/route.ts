@@ -287,7 +287,7 @@ async function fetchTorontoMCIAttr(
 
   const url = new URL(featureUrl.replace(/\/$/, "") + "/query");
   url.searchParams.set("f", "json");
-  url.searchParams.set("outFields", "OBJECTID,OFFENCE,MCI_CATEGORY,OCC_DATE,LAT_WGS84,LONG_WGS84,NEIGHBOURHOOD_140,NEIGHBOURHOOD_158");
+  url.searchParams.set("outFields", "OBJECTID,OFFENCE,MCI_CATEGORY,OCC_DATE,OCC_HOUR,REPORT_DATE,REPORT_HOUR,LAT_WGS84,LONG_WGS84,NEIGHBOURHOOD_140,NEIGHBOURHOOD_158");
   url.searchParams.set("where", where);
   url.searchParams.set("returnGeometry", "false");
   url.searchParams.set("orderByFields", "OCC_DATE DESC");
@@ -316,8 +316,25 @@ async function fetchTorontoMCIAttr(
       const latA = parseFloat(a.LAT_WGS84);
       const lngA = parseFloat(a.LONG_WGS84);
       const type = a.OFFENCE || a.MCI_CATEGORY || "Incident";
-      const timestamp = normalizeArcgisDate(a.OCC_DATE) || new Date().toISOString();
-      return { id, type, timestamp, lat: latA, lng: lngA, address: a.NEIGHBOURHOOD_140 || a.NEIGHBOURHOOD_158, source: "toronto-mci" } as Incident;
+
+      // Build timestamp from OCC_DATE + OCC_HOUR (fallback to REPORT_*), default to midnight if missing
+      let ts: string | null = null;
+      const occEpoch = typeof a.OCC_DATE === "number" ? a.OCC_DATE : undefined;
+      const occHour = a.OCC_HOUR != null ? parseInt(String(a.OCC_HOUR), 10) : undefined;
+      const repEpoch = typeof a.REPORT_DATE === "number" ? a.REPORT_DATE : undefined;
+      const repHour = a.REPORT_HOUR != null ? parseInt(String(a.REPORT_HOUR), 10) : undefined;
+      const buildIso = (epoch: number | undefined, hour: number | undefined) => {
+        if (epoch == null || !isFinite(epoch)) return null;
+        const d = new Date(epoch);
+        const y = d.getUTCFullYear();
+        const m = d.getUTCMonth();
+        const day = d.getUTCDate();
+        const h = Number.isFinite(hour as any) ? (hour as number) : 0;
+        return new Date(Date.UTC(y, m, day, h, 0, 0)).toISOString();
+      };
+      ts = buildIso(occEpoch, occHour) || buildIso(repEpoch, repHour) || normalizeArcgisDate(a.OCC_DATE) || normalizeArcgisDate(a.REPORT_DATE) || new Date().toISOString();
+
+      return { id, type, timestamp: ts, lat: latA, lng: lngA, address: a.NEIGHBOURHOOD_140 || a.NEIGHBOURHOOD_158, source: "toronto-mci" } as Incident;
     })
     .filter((i) => isFinite(i.lat as any) && isFinite(i.lng as any));
 

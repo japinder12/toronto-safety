@@ -16,7 +16,7 @@ export default function IncidentsTable({ data, loading }: { data: Incident[]; lo
       <table className="w-full text-sm border-collapse">
         <thead>
           <tr className="text-left border-b border-black/10 dark:border-white/20 bg-black/[.03] dark:bg-white/[.04]">
-            <th className="py-2 pr-4">Time</th>
+            <th className="py-2 pr-4">Time (Eastern Time)</th>
             <th className="py-2 pr-4">Type</th>
             <th className="py-2 pr-4">Address</th>
             <th className="py-2">Source</th>
@@ -34,7 +34,19 @@ export default function IncidentsTable({ data, loading }: { data: Incident[]; lo
           ) : (
             data.map((i, idx) => {
               const t = new Date(i.timestamp);
-              const ts = isNaN(t.getTime()) ? "Unknown" : t.toLocaleString();
+              const ts = isNaN(t.getTime())
+                ? "Unknown"
+                : t.toLocaleString("en-CA", {
+                    timeZone: "America/Toronto",
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: true,
+                    timeZoneName: "short",
+                  });
               return (
               <tr key={i.id} className={`border-b border-black/5 dark:border-white/10 ${idx % 2 === 0 ? "bg-black/[.01] dark:bg-white/[.02]" : ""}`}>
                 <td className="py-2 pr-4 whitespace-nowrap">{ts}</td>
