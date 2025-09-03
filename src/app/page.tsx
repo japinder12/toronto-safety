@@ -49,10 +49,11 @@ export default function Home() {
         setCenter([geo.lat, geo.lng]);
         setAreaLabel(geo?.raw?.display_name || "");
         const res = await fetch(
-          `/api/incidents?lat=${geo.lat}&lng=${geo.lng}&radiusKm=${radiusKm}&days=${days}`,
+          `/api/incidents?lat=${geo.lat}&lng=${geo.lng}&radiusKm=${radiusKm}&days=${days}&debug=1`,
           { cache: "no-store" }
         ).then((r) => r.json());
         setIncidents(res.incidents || []);
+        setDebugInfo({ count: res.count, attempts: res?.debug?.attempts || [], sample: res?.incidents?.[0] });
         if (res.notice) {
           // @ts-ignore - stash on window for quick visibility, and show below title
           (window as any).__INCIDENTS_NOTICE__ = res.notice;
@@ -71,6 +72,7 @@ export default function Home() {
   };
 
   const [notice, setNotice] = useState<string>("");
+  const [debugInfo, setDebugInfo] = useState<any>(null);
 
   return (
     <div className="min-h-screen p-6 sm:p-10 flex flex-col gap-6">
@@ -87,6 +89,11 @@ export default function Home() {
         {notice ? (
           <div className="text-xs rounded-md px-3 py-2 bg-yellow-100/70 text-yellow-900 border border-yellow-200/70">
             {notice}
+          </div>
+        ) : null}
+        {debugInfo ? (
+          <div className="text-[11px] rounded-md px-3 py-1 bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15">
+            API count: {debugInfo.count ?? 0}
           </div>
         ) : null}
         {areaLabel ? (

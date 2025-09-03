@@ -44,8 +44,7 @@ export async function GET(req: NextRequest) {
       if (wantsToronto || (!wantsPeel && !wantsToronto)) {
         if (torontoMciUrl)
           tasks.push(
-            // Use server-side date filtering on OCC_DATE for Toronto MCI
-            fetchArcgisByRadius(torontoMciUrl, { lat, lng, radiusKm, days }, "toronto-mci", attempts, "OCC_DATE")
+            fetchTorontoMCIAttr(torontoMciUrl, { lat, lng, radiusKm, days }, attempts)
           );
       }
 
@@ -130,8 +129,7 @@ async function fetchArcgisByRadius(
   featureUrl: string,
   opts: { lat: number; lng: number; radiusKm: number; days: number },
   sourceTag: string,
-  debugLog?: any[],
-  dateField?: string
+  debugLog?: any[]
 ): Promise<Incident[]> {
   const { lat, lng, radiusKm, days } = opts;
   const url = new URL(featureUrl.replace(/\/$/, "") + "/query");
@@ -148,7 +146,7 @@ async function fetchArcgisByRadius(
   url.searchParams.set("spatialRel", "esriSpatialRelIntersects");
   url.searchParams.set("distance", String(Math.max(0.1, radiusKm) * 1000));
   url.searchParams.set("units", "esriSRUnit_Meter");
-  url.searchParams.set("where", buildWhere(days, dateField));
+  url.searchParams.set("where", "1=1");
   url.searchParams.set("resultRecordCount", "300");
   url.searchParams.set("returnExceededLimitFeatures", "true");
 
@@ -178,7 +176,7 @@ async function fetchArcgisByRadius(
     const url2 = new URL(url.toString());
     url2.searchParams.set("distance", String(Math.max(0.1, radiusKm)));
     url2.searchParams.set("units", "esriSRUnit_Kilometer");
-    url2.searchParams.set("where", buildWhere(days, dateField));
+    url2.searchParams.set("where", "1=1");
     try {
       const res2 = await fetch(url2.toString(), { cache: "no-store" });
       const data2 = res2.ok ? await res2.json() : null;
@@ -212,7 +210,7 @@ async function fetchArcgisByRadius(
     url3.searchParams.set("geometryType", "esriGeometryEnvelope");
     url3.searchParams.set("inSR", "4326");
     url3.searchParams.set("spatialRel", "esriSpatialRelIntersects");
-    url3.searchParams.set("where", buildWhere(days, dateField));
+    url3.searchParams.set("where", "1=1");
     url3.searchParams.set("resultRecordCount", "300");
     url3.searchParams.set("returnExceededLimitFeatures", "true");
     try {
@@ -270,13 +268,7 @@ function bboxFromPoint(lat: number, lng: number, radiusKm: number) {
   } as const;
 }
 
-function buildWhere(days: number, dateField?: string): string {
-  if (!dateField) return "1=1";
-  const end = Date.now();
-  const start = end - days * 24 * 60 * 60 * 1000;
-  // ArcGIS Date fields compare using epoch millis when provided as numbers
-  return `${dateField} >= ${Math.floor(start)} AND ${dateField} <= ${Math.floor(end)}`;
-}
+// No server-side date WHERE; filtering handled after fetch with fallback messaging
 
 function arcgisToLatLng(g: any): { lat?: number; lng?: number } {
   if (!g) return {};
