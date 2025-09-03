@@ -39,12 +39,6 @@ pnpm install
 - Copy `.env.local.example` to `.env.local` and set:
   - `TORONTO_MCI_FEATURE_URL` (required)
     Example: `https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/Major_Crime_Indicators_Open_Data/FeatureServer/0`
-- Recommended for geocoding (per Nominatim policy):
-
-```bash
-GEOCODE_USER_AGENT="toronto-safety/0.1 (your-email@example.com)"
-GEOCODE_REFERER="http://localhost:3000"
-```
 
 3) Run
 
