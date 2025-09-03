@@ -14,10 +14,10 @@ import { colorForType } from "@/lib/colors";
 
 export default function IncidentsTable({ data, loading }: { data: Incident[]; loading?: boolean }) {
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full overflow-auto max-h-[60vh] rounded-md">
       <table className="w-full text-sm border-collapse">
-        <thead>
-          <tr className="text-left border-b border-black/10 dark:border-white/20 bg-black/[.03] dark:bg-white/[.04]">
+        <thead className="sticky top-0 z-10">
+          <tr className="text-left border-b border-black/10 dark:border-white/20 bg-black/[.04] dark:bg-white/[.06] backdrop-blur supports-[backdrop-filter]:bg-black/5">
             <th className="py-2 pr-4">Time (Eastern Time)</th>
             <th className="py-2 pr-4">Type</th>
             <th className="py-2 pr-4">Address</th>
@@ -50,7 +50,7 @@ export default function IncidentsTable({ data, loading }: { data: Incident[]; lo
                     timeZoneName: "short",
                   });
               return (
-              <tr key={i.id} className={`border-b border-black/5 dark:border-white/10 ${idx % 2 === 0 ? "bg-black/[.01] dark:bg-white/[.02]" : ""}`}>
+              <tr key={i.id} className={`border-b border-black/5 dark:border-white/10 ${idx % 2 === 0 ? "bg-black/[.01] dark:bg-white/[.02]" : ""} hover:bg-black/[.03] dark:hover:bg-white/[.06] transition-colors`}>
                 <td className="py-2 pr-4 whitespace-nowrap">{ts}</td>
                 <td className="py-2 pr-4">
                   <span className="inline-flex items-center gap-2">

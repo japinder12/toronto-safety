@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { LatLngExpression } from "leaflet";
+import type { LatLngExpression, LayerGroup } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 type Marker = {
@@ -16,9 +16,10 @@ type MapViewProps = {
   center: LatLngExpression;
   zoom?: number;
   markers?: Marker[];
+  autoFit?: boolean;
 };
 
-export default function MapView({ center, zoom = 12, markers = [] }: MapViewProps) {
+export default function MapView({ center, zoom = 12, markers = [], autoFit = true }: MapViewProps) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<any>(null);
 
@@ -59,19 +60,25 @@ export default function MapView({ center, zoom = 12, markers = [] }: MapViewProp
         (mapInstanceRef.current as any)._markerLayer = L.layerGroup().addTo(mapInstanceRef.current);
       }
 
-      const group = (mapInstanceRef.current as any)._markerLayer as import("leaflet").LayerGroup;
+      const group = (mapInstanceRef.current as any)._markerLayer as LayerGroup;
 
+      const latlngs: [number, number][] = [];
       markers.forEach((m) => {
         const circle = L.circleMarker([m.lat, m.lng], {
           radius: 6,
-          color: m.color || "#2563eb",
+          color: "#ffffff",
           weight: 2,
           fillColor: m.color || "#3b82f6",
-          fillOpacity: 0.7,
+          fillOpacity: 0.85,
         });
         if (m.label) circle.bindPopup(m.label);
         circle.addTo(group);
+        latlngs.push([m.lat, m.lng]);
       });
+      if (autoFit && latlngs.length > 0) {
+        const bounds = L.latLngBounds(latlngs);
+        mapInstanceRef.current.fitBounds(bounds, { padding: [24, 24] });
+      }
     };
 
     init();
@@ -97,20 +104,27 @@ export default function MapView({ center, zoom = 12, markers = [] }: MapViewProp
         if ((mapInstanceRef.current as any)._markerLayer) {
           (mapInstanceRef.current as any)._markerLayer.clearLayers();
         }
-        const group =
-          (mapInstanceRef.current as any)._markerLayer || L.layerGroup().addTo(mapInstanceRef.current);
-        (mapInstanceRef.current as any)._markerLayer = group;
+        const group: LayerGroup =
+          (mapInstanceRef.current as any)._markerLayer || (L.layerGroup().addTo(mapInstanceRef.current) as LayerGroup);
+        (mapInstanceRef.current as any)._markerLayer = group as any;
+        const Llib = await import("leaflet");
+        const latlngs: [number, number][] = [];
         markers.forEach((m) => {
-          const circle = L.circleMarker([m.lat, m.lng], {
+          const circle = Llib.circleMarker([m.lat, m.lng], {
             radius: 6,
-            color: m.color || "#2563eb",
+            color: "#ffffff",
             weight: 2,
             fillColor: m.color || "#3b82f6",
-            fillOpacity: 0.7,
+            fillOpacity: 0.85,
           });
           if (m.label) circle.bindPopup(m.label);
           circle.addTo(group);
+          latlngs.push([m.lat, m.lng]);
         });
+        if (autoFit && latlngs.length > 0) {
+          const bounds = Llib.latLngBounds(latlngs);
+          mapInstanceRef.current.fitBounds(bounds, { padding: [24, 24] });
+        }
       }
     };
     update();
@@ -124,4 +138,3 @@ export default function MapView({ center, zoom = 12, markers = [] }: MapViewProp
     />
   );
 }
-

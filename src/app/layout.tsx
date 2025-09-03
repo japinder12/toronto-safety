@@ -14,8 +14,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Toronto Police Service Major Crime Indicators | Neighbourhood Safety Dashboard",
-  description: "View nearby incidents in Toronto",
+  title: "Toronto Neighbourhood Safety Dashboard",
+  description: "Explore recent Toronto Police MCI incidents near any address.",
+  openGraph: {
+    title: "Toronto Neighbourhood Safety Dashboard",
+    description: "Explore recent Toronto Police MCI incidents near any address.",
+    url: "http://localhost:3000/",
+    siteName: "Toronto Safety",
+    images: [{ url: "/og.svg", width: 1200, height: 630, alt: "Toronto Safety" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Toronto Neighbourhood Safety Dashboard",
+    description: "Explore recent Toronto Police MCI incidents near any address.",
+    images: ["/og.svg"],
+  },
 };
 
 export default function RootLayout({
