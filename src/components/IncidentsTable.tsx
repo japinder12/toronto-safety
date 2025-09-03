@@ -10,6 +10,8 @@ type Incident = {
   source?: string;
 };
 
+import { colorForType } from "@/lib/colors";
+
 export default function IncidentsTable({ data, loading }: { data: Incident[]; loading?: boolean }) {
   return (
     <div className="w-full overflow-x-auto">
@@ -50,7 +52,12 @@ export default function IncidentsTable({ data, loading }: { data: Incident[]; lo
               return (
               <tr key={i.id} className={`border-b border-black/5 dark:border-white/10 ${idx % 2 === 0 ? "bg-black/[.01] dark:bg-white/[.02]" : ""}`}>
                 <td className="py-2 pr-4 whitespace-nowrap">{ts}</td>
-                <td className="py-2 pr-4">{i.type}</td>
+                <td className="py-2 pr-4">
+                  <span className="inline-flex items-center gap-2">
+                    <span aria-hidden className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: colorForType(i.type) }} />
+                    {i.type}
+                  </span>
+                </td>
                 <td className="py-2 pr-4">{i.address || "—"}</td>
                 <td className="py-2">{i.source || "—"}</td>
               </tr>

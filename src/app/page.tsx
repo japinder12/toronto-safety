@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import SearchForm from "@/components/SearchForm";
 import MapView from "@/components/MapView";
 import IncidentsTable from "@/components/IncidentsTable";
+import Legend from "@/components/Legend";
+import { colorForType } from "@/lib/colors";
 
 type Incident = {
   id: string;
@@ -32,7 +34,7 @@ export default function Home() {
           lat: i.lat!,
           lng: i.lng!,
           label: `${i.type}${i.address ? `, ${i.address}` : ""}`,
-          color: "#f97316",
+          color: colorForType(i.type),
         })),
     [incidents]
   );
@@ -104,6 +106,9 @@ export default function Home() {
             <span className="text-xs opacity-70">{loading ? "Loading…" : `${incidents.length} result(s)`}</span>
           </div>
           <div className="flex flex-wrap gap-2 mb-2 text-xs opacity-70">Range: {days === 90 ? "Last 3 months" : days === 180 ? "Last 6 months" : days === 365 ? "Last year" : `${days} day(s)`} • {radiusKm}km radius</div>
+          <div className="mb-3">
+            <Legend types={incidents.map((i) => i.type)} />
+          </div>
           <IncidentsTable data={incidents} loading={loading} />
         </div>
       </section>

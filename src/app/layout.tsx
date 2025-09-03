@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import AboutData from "@/components/AboutData";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +30,11 @@ export default function RootLayout({
       >
         {children}
         <footer className="mt-10 px-6 sm:px-10 py-6 text-xs opacity-70">
-          <div>
-            Data coverage: City of Toronto (Toronto Police Service Major Crime Indicators). This dashboard is for awareness only and not an official report.
+          <div className="mx-auto w-full max-w-5xl">
+            <div>
+              Data coverage: City of Toronto (Toronto Police Service Major Crime Indicators). This dashboard is for awareness only and not an official report.
+            </div>
+            <AboutData />
           </div>
         </footer>
       </body>
