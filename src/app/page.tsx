@@ -16,10 +16,10 @@ type Incident = {
 };
 
 export default function Home() {
-  const [center, setCenter] = useState<[number, number]>([43.589, -79.644]); // Mississauga City Centre
+  const [center, setCenter] = useState<[number, number]>([43.6532, -79.3832]); // Toronto City Hall area
   const [loading, setLoading] = useState(false);
   const [incidents, setIncidents] = useState<Incident[]>([]);
-  const [days, setDays] = useState<number>(7);
+  const [days, setDays] = useState<number>(90);
   const [areaLabel, setAreaLabel] = useState<string>("");
   const [radiusKm, setRadiusKm] = useState<number>(3);
 
@@ -103,7 +103,7 @@ export default function Home() {
             <h2 className="font-medium">Incidents</h2>
             <span className="text-xs opacity-70">{loading ? "Loading…" : `${incidents.length} result(s)`}</span>
           </div>
-          <div className="flex flex-wrap gap-2 mb-2 text-xs opacity-70">Range: {days} day(s) • {radiusKm}km radius</div>
+          <div className="flex flex-wrap gap-2 mb-2 text-xs opacity-70">Range: {days === 90 ? "Last 3 months" : days === 180 ? "Last 6 months" : days === 365 ? "Last year" : `${days} day(s)`} • {radiusKm}km radius</div>
           <IncidentsTable data={incidents} loading={loading} />
         </div>
       </section>
