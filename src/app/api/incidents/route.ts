@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
   const days = parseInt(searchParams.get("days") || "7", 10);
   const mock = searchParams.get("mock") === "1";
   const debug = searchParams.get("debug") === "1";
+  const strict = searchParams.get("strict") === "1";
   const attempts: any[] = [];
 
   if (!isFinite(lat) || !isFinite(lng)) {
@@ -46,9 +47,9 @@ export async function GET(req: NextRequest) {
       return isFinite(t) ? t >= cutoff : true;
     });
 
-    // Fallback: if filter removes everything but we had data, return unfiltered to ensure UI shows something during setup
+    // Fallback: if filter removes everything but we had data, return unfiltered (unless strict)
     let filterFallback = false;
-    if (filtered.length === 0 && preFilterCount > 0) {
+    if (!strict && filtered.length === 0 && preFilterCount > 0) {
       filtered = incidents;
       filterFallback = true;
     }

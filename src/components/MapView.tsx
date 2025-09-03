@@ -71,7 +71,10 @@ export default function MapView({ center, zoom = 12, markers = [], autoFit = tru
           fillColor: m.color || "#3b82f6",
           fillOpacity: 0.85,
         });
-        if (m.label) circle.bindPopup(m.label);
+        if (m.label) {
+          circle.bindPopup(m.label);
+          circle.bindTooltip(m.label, { direction: "top", sticky: true, opacity: 0.9 });
+        }
         circle.addTo(group);
         latlngs.push([m.lat, m.lng]);
       });
@@ -117,7 +120,10 @@ export default function MapView({ center, zoom = 12, markers = [], autoFit = tru
             fillColor: m.color || "#3b82f6",
             fillOpacity: 0.85,
           });
-          if (m.label) circle.bindPopup(m.label);
+          if (m.label) {
+            circle.bindPopup(m.label);
+            circle.bindTooltip(m.label, { direction: "top", sticky: true, opacity: 0.9 });
+          }
           circle.addTo(group);
           latlngs.push([m.lat, m.lng]);
         });

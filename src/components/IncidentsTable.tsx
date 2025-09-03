@@ -15,9 +15,9 @@ import { colorForType } from "@/lib/colors";
 export default function IncidentsTable({ data, loading }: { data: Incident[]; loading?: boolean }) {
   return (
     <div className="w-full overflow-auto max-h-[60vh] rounded-md">
-      <table className="w-full text-sm border-collapse">
+      <table className="w-full text-sm border-collapse tabular">
         <thead className="sticky top-0 z-10">
-          <tr className="text-left border-b border-black/10 dark:border-white/20 bg-black/[.04] dark:bg-white/[.06] backdrop-blur supports-[backdrop-filter]:bg-black/5">
+          <tr className="text-left border-b border-black/10 dark:border-white/20 bg-black/[.04] dark:bg-white/[.06] backdrop-blur supports-[backdrop-filter]:bg-black/5 shadow-[inset_0_-1px_0_rgba(0,0,0,.05)]">
             <th className="py-2 pr-4">Time (Eastern Time)</th>
             <th className="py-2 pr-4">Type</th>
             <th className="py-2 pr-4">Address</th>

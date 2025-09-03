@@ -30,6 +30,9 @@ export const metadata: Metadata = {
     description: "Explore recent Toronto Police MCI incidents near any address.",
     images: ["/og.svg"],
   },
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

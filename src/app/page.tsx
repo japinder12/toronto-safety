@@ -24,6 +24,7 @@ export default function Home() {
   const [days, setDays] = useState<number>(90);
   const [areaLabel, setAreaLabel] = useState<string>("");
   const [radiusKm, setRadiusKm] = useState<number>(3);
+  const [strict, setStrict] = useState<boolean>(false);
 
   const markers = useMemo(
     () =>
@@ -33,15 +34,16 @@ export default function Home() {
           id: i.id,
           lat: i.lat!,
           lng: i.lng!,
-          label: `${i.type}${i.address ? `, ${i.address}` : ""}`,
+          label: `${i.type} — ${new Date(i.timestamp).toLocaleString("en-CA", { timeZone: "America/Toronto", hour12: true })}${i.address ? `, ${i.address}` : ""}`,
           color: colorForType(i.type),
         })),
     [incidents]
   );
 
-  const onSearch = async ({ postal, days, radiusKm }: { postal: string; days: number; radiusKm: number }) => {
+  const onSearch = async ({ postal, days, radiusKm, strict }: { postal: string; days: number; radiusKm: number; strict: boolean }) => {
     setDays(days);
     setRadiusKm(radiusKm);
+    setStrict(strict);
     setLoading(true);
     try {
       const geo = await fetch(`/api/geocode?postal=${encodeURIComponent(postal)}`, { cache: "no-store" }).then((r) =>
@@ -51,7 +53,7 @@ export default function Home() {
         setCenter([geo.lat, geo.lng]);
         setAreaLabel(geo?.raw?.display_name || "");
         const res = await fetch(
-          `/api/incidents?lat=${geo.lat}&lng=${geo.lng}&radiusKm=${radiusKm}&days=${days}`,
+          `/api/incidents?lat=${geo.lat}&lng=${geo.lng}&radiusKm=${radiusKm}&days=${days}${strict ? "&strict=1" : ""}`,
           { cache: "no-store" }
         ).then((r) => r.json());
         setIncidents(res.incidents || []);
@@ -112,6 +114,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-black/10 dark:border-white/15 bg-white/70 dark:bg-white/10">
               {radiusKm} km
             </span>
+            {strict && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-black/10 dark:border-white/15 bg-white/70 dark:bg-white/10">
+                Strict dates
+              </span>
+            )}
           </div>
           <div className="mb-3">
             <Legend types={incidents.map((i) => i.type)} />

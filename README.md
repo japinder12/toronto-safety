@@ -1,6 +1,6 @@
 # Toronto Safety
 
-Toronto Neighbourhood Safety Dashboard — explore recent Toronto Police Service Major Crime Indicators (MCI) near any address.
+Neighbourhood Safety Dashboard: explore recent Toronto Police Service Major Crime Indicators (MCI) near any address.
 
 ## Features
 
