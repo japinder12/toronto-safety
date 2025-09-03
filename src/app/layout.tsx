@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Neighborhood Safety Dashboard",
-  description: "View nearby incidents in Toronto and Peel",
+  title: "Toronto Police Service Major Crime Indicators | Neighbourhood Safety Dashboard",
+  description: "View nearby incidents in Toronto",
 };
 
 export default function RootLayout({

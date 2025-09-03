@@ -1,6 +1,6 @@
 # Toronto Safety
 
-Neighborhood Safety Dashboard for the City of Toronto.
+Neighbourhood Safety Dashboard for the City of Toronto.
 
 What it does: Enter a postal code → shows recent Toronto Police Service Major Crime Indicators on a map and table.
 Scope: City of Toronto only.
