@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AboutData from "@/components/AboutData";
@@ -13,33 +14,42 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://toronto-safety-five.vercel.app"),
-  title: "Toronto Neighbourhood Safety Dashboard",
-  description: "Explore recent Toronto Police MCI incidents near any address.",
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  const h = headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
+  const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
+  const base = new URL(`${proto}://${host}`);
+
+  return {
+    metadataBase: base,
     title: "Toronto Neighbourhood Safety Dashboard",
     description: "Explore recent Toronto Police MCI incidents near any address.",
-    url: "https://toronto-safety-five.vercel.app/",
-    siteName: "Toronto Safety",
-    images: [{ url: "/og.png?v=1", width: 1200, height: 630, alt: "Toronto Safety" }],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Toronto Neighbourhood Safety Dashboard",
-    description: "Explore recent Toronto Police MCI incidents near any address.",
-    images: ["/og.png?v=1"],
-  },
-  // Rely on Next auto-links for app/icon.png and app/apple-icon.png
-  // Keep pinned tab for Safari
-  icons: {
-    other: [
-      { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#0ea5e9" },
-    ],
-  },
-  manifest: "/site.webmanifest",
-};
+    openGraph: {
+      title: "Toronto Neighbourhood Safety Dashboard",
+      description: "Explore recent Toronto Police MCI incidents near any address.",
+      url: base.href,
+      siteName: "Toronto Safety",
+      images: [
+        { url: "/og.png?v=1", width: 1200, height: 630, alt: "Toronto Safety", type: "image/png" },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Toronto Neighbourhood Safety Dashboard",
+      description: "Explore recent Toronto Police MCI incidents near any address.",
+      images: ["/og.png?v=1"],
+    },
+    // Rely on Next auto-links for app/icon.png and app/apple-icon.png
+    // Keep pinned tab for Safari
+    icons: {
+      other: [
+        { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#0ea5e9" },
+      ],
+    },
+    manifest: "/site.webmanifest",
+  };
+}
 
 export default function RootLayout({
   children,
