@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://toronto-safety-five.vercel.app"),
   title: "Toronto Neighbourhood Safety Dashboard",
   description: "Explore recent Toronto Police MCI incidents near any address.",
   openGraph: {
@@ -21,14 +22,14 @@ export const metadata: Metadata = {
     description: "Explore recent Toronto Police MCI incidents near any address.",
     url: "https://toronto-safety-five.vercel.app/",
     siteName: "Toronto Safety",
-    images: [{ url: "/og", width: 1200, height: 630, alt: "Toronto Safety" }],
+    images: [{ url: "/og.png?v=1", width: 1200, height: 630, alt: "Toronto Safety" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Toronto Neighbourhood Safety Dashboard",
     description: "Explore recent Toronto Police MCI incidents near any address.",
-    images: ["/og"],
+    images: ["/og.png?v=1"],
   },
   // Rely on Next auto-links for app/icon.png and app/apple-icon.png
   // Keep pinned tab for Safari
