@@ -21,17 +21,29 @@ export const metadata: Metadata = {
     description: "Explore recent Toronto Police MCI incidents near any address.",
     url: "https://toronto-safety-five.vercel.app/",
     siteName: "Toronto Safety",
-    images: [{ url: "/og.svg", width: 1200, height: 630, alt: "Toronto Safety" }],
+    images: [{ url: "/og", width: 1200, height: 630, alt: "Toronto Safety" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Toronto Neighbourhood Safety Dashboard",
     description: "Explore recent Toronto Police MCI incidents near any address.",
-    images: ["/og.svg"],
+    images: ["/og"],
   },
   icons: {
-    icon: "/favicon.svg",
+    // Put PNG first for Safari; SVG last as enhancement
+    icon: [
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+      { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" },
+    ],
+    shortcut: ["/favicon-32x32.png"],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180" },
+    ],
+    other: [
+      { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#0ea5e9" },
+    ],
   },
   manifest: "/site.webmanifest",
 };
