@@ -30,17 +30,9 @@ export const metadata: Metadata = {
     description: "Explore recent Toronto Police MCI incidents near any address.",
     images: ["/og"],
   },
+  // Rely on Next auto-links for app/icon.png and app/apple-icon.png
+  // Keep pinned tab for Safari
   icons: {
-    // Put PNG first for Safari; SVG last as enhancement
-    icon: [
-      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
-      { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
-      { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" },
-    ],
-    shortcut: ["/favicon-32x32.png"],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180" },
-    ],
     other: [
       { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#0ea5e9" },
     ],
