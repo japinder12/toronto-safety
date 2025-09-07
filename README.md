@@ -1,5 +1,5 @@
 # Toronto Safety
-![Toronto Safety](og.png)
+![Toronto Safety](./og.png)
 
 Neighbourhood Safety Dashboard: explore recent Toronto Police Service Major Crime Indicators (MCI) near any address.
 
